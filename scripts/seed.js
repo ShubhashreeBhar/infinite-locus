@@ -1,3 +1,5 @@
+import 'dotenv/config'; // ES module equivalent of require('dotenv').config()
+
 /**
  * scripts/seed.js
  * Run with: npm run db:seed
@@ -20,9 +22,19 @@
  * you need to reset the database to its initial state using an admin token.
  */
 
-const BASE_URL = 'https://szgn4dib.us-east.insforge.app';
+// Read from .env (VITE_ prefix) with hardcoded fallbacks
+const BASE_URL =
+  process.env.VITE_INSFORGE_URL ||
+  'https://szgn4dib.us-east.insforge.app';
 const ANON_KEY =
+  process.env.VITE_INSFORGE_ANON_KEY ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OC0xMjM0LTU2NzgtOTBhYi1jZGVmMTIzNDU2NzgiLCJlbWFpbCI6ImFub25AaW5zZm9yZ2UuY29tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzI2Mjd9.MpTUCHyPAdNcCDbSq3mJV3SbKHNufPoKN4qNcWJdGf8';
+
+// ── Verify env vars are loaded ───────────────────────────────────────────────
+console.log('[env] VITE_INSFORGE_URL    =', process.env.VITE_INSFORGE_URL  || '(using hardcoded fallback)');
+console.log('[env] VITE_INSFORGE_ANON_KEY =', process.env.VITE_INSFORGE_ANON_KEY ? '***loaded***' : '(using hardcoded fallback)');
+console.log('[env] Connecting to:', BASE_URL);
+console.log('');
 
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -139,12 +151,41 @@ const GOLDEN_FORK_REVIEWS = [
 
 // ── PostgREST INSERT helper ─────────────────────────────────────────────────────
 async function pgInsert(table, rows) {
-  const res = await fetch(`${BASE_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...HEADERS, Prefer: 'return=representation' },
-    body: JSON.stringify(rows),
-  });
-  const json = await res.json();
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: { ...HEADERS, Prefer: 'return=representation' },
+      body: JSON.stringify(rows),
+    });
+  } catch (networkErr) {
+    throw new Error(
+      `Network error reaching ${BASE_URL} — is the URL correct?\n  Details: ${networkErr.message}`
+    );
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('text/html')) {
+    const html = await res.text();
+    throw new Error(
+      `INSERT into ${table} failed (${res.status}): server returned HTML instead of JSON.\n` +
+      `  This usually means the BASE_URL is wrong or the server is down.\n` +
+      `  URL used: ${BASE_URL}\n` +
+      `  First 300 chars of response: ${html.slice(0, 300)}`
+    );
+  }
+
+  let json;
+  try {
+    json = await res.json();
+  } catch (parseErr) {
+    const raw = await res.clone().text().catch(() => '(could not read body)');
+    throw new Error(
+      `INSERT into ${table} failed (${res.status}): response is not valid JSON.\n` +
+      `  First 300 chars: ${raw.slice(0, 300)}`
+    );
+  }
+
   if (!res.ok) {
     throw new Error(`INSERT into ${table} failed (${res.status}): ${JSON.stringify(json)}`);
   }
