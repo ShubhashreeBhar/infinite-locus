@@ -14,7 +14,7 @@ A modern, full-stack web application for discovering and reviewing local busines
 - **Database Logic**: SQL triggers for automated rating aggregation.
 
 ## ⚙️ Setup
-1. Clone the repository: `git clone https://github.com/ShubhashreeBhar/infinite-locus.git`
+1. Clone the repository: `git clone https://github.com/ShubhashreeBhar/feedtrust.git`
 2. Install dependencies: `npm install`
 3. Configure environment: Create a `.env` file with your `VITE_INSFORGE_URL` and `VITE_INSFORGE_ANON_KEY`.
 4. Run development server: `npm run dev`

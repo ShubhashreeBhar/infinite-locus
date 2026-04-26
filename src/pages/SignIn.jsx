@@ -36,7 +36,7 @@ export default function SignIn() {
               <Star size={24} className="text-white" fill="white" />
             </div>
             <span className="font-display text-2xl font-bold bg-gradient-to-r from-primary-300 to-purple-300 bg-clip-text text-transparent">
-              Infinite Locus
+              FeedTrust
             </span>
           </div>
           <h1 className="font-display text-3xl font-bold text-white mb-2">Welcome back</h1>

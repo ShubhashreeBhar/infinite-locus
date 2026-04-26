@@ -22,7 +22,7 @@ export default function Navbar() {
             <Star size={18} className="text-white" fill="white" />
           </div>
           <span className="font-display text-xl font-bold bg-gradient-to-r from-primary-300 to-purple-300 bg-clip-text text-transparent">
-            Infinite Locus
+            FeedTrust
           </span>
         </Link>
 

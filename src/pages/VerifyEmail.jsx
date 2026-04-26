@@ -23,7 +23,7 @@ export default function VerifyEmail() {
       toast.error(error.message || 'Invalid or expired code');
     } else {
       setUser(data.user);
-      toast.success('Email verified! Welcome to Infinite Locus 🎉');
+      toast.success('Email verified! Welcome to FeedTrust 🎉');
       navigate('/');
     }
     setLoading(false);

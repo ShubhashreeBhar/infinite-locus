@@ -4,7 +4,7 @@ import 'dotenv/config'; // ES module equivalent of require('dotenv').config()
  * scripts/seed.js
  * Run with: npm run db:seed
  *
- * Seeds the Infinite Locus database with 9 businesses and 2 approved
+ * Seeds the FeedTrust database with 9 businesses and 2 approved
  * reviews for The Golden Fork so the 4.0-star rating is immediately visible.
  *
  * IMPORTANT — RLS note:
@@ -209,7 +209,7 @@ async function pgRpc(fnName, params) {
 async function main() {
   console.log('');
   console.log('======================================');
-  console.log('  Infinite Locus — Database Seed');
+  console.log('  FeedTrust — Database Seed');
   console.log('======================================\n');
 
   // --- Insert businesses
