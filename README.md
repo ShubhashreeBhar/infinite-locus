@@ -2,6 +2,9 @@
 
 A modern, full-stack web application for discovering and reviewing local businesses. This project features a React-based frontend and a PostgreSQL backend with automated rating calculations.
 
+## 🌐 Live Demo
+**[https://feedtrust.vercel.app](https://feedtrust.vercel.app)**
+
 ## ✨ Key Features
 - **Business Directory**: Browse and search businesses by category.
 - **Rating System**: Real-time star ratings and detailed reviews.
